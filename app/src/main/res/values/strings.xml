@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Museumm</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="invalid_login_message">Desculpe, seu login está incorreto</string>
+    <string name="map_activity_title">Search Map</string>
+    <string name="login_activity_title">Login</string>
+    <string name="register_activity_title">Register</string>
+    <string name="confirm_password">Confirme Senha</string>
+    <string name="submit">Entrar</string>
+    <string name="register">Registrar-se</string>
+    <string name="cancel">Cancelar</string>
+    <string name="register_success">Obrigado, seu registro foi um sucesso</string>
+    <string name="login_now">Entre Agora</string>
 </resources>

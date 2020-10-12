@@ -24,11 +24,12 @@
             android:textColor="#ffffff" />
 
         <EditText
+            android:id="@+id/fullnameEditText"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
             android:drawableStart="@drawable/ic_user"
-            android:hint="Usuário"
+            android:hint="Nome"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
             android:padding="10dp"
             />
         <EditText
+            android:id="@+id/emailEditText"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
@@ -48,6 +50,7 @@
             android:padding="10dp"
             />
         <EditText
+            android:id="@+id/passwordEditText"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
@@ -59,7 +62,21 @@
             android:background="@drawable/login_edit_background"
             android:padding="10dp"
             />
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:drawableStart="@drawable/ic_email"
+            android:hint="Confirme a senha"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_edit_background"
+            android:padding="10dp"
+            />
         <Button
+            android:id="@+id/submitButton"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="30dp"
@@ -68,6 +85,17 @@
             android:background="@drawable/button_background"
             android:text="REGISTRAR-SE"
             android:fontFamily="@font/gothamb"/>
-
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_white"
+            android:fontFamily="@font/gothamb"
+            android:gravity="center"
+            android:text="Cancelar"
+            android:textColor="#ffffff" />
     </LinearLayout>
 </RelativeLayout>

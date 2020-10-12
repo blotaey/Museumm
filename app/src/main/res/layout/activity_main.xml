@@ -25,11 +25,12 @@
             android:textColor="#ffffff" />
 
         <EditText
+            android:id="@+id/emailEditText"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            android:drawableStart="@drawable/ic_user"
-            android:hint="Usuário"
+            android:drawableStart="@drawable/ic_email"
+            android:hint="Email"
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
             android:padding="10dp"
             />
         <EditText
+            android:id="@+id/passwordEditText"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
@@ -50,6 +52,7 @@
             />
 
         <Button
+            android:id="@+id/submitButton"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="30dp"
@@ -60,6 +63,7 @@
             android:fontFamily="@font/gothamb"/>
 
         <Button
+            android:id="@+id/registerButton"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="30dp"
