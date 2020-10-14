@@ -1,11 +1,15 @@
 package com.example.museumm
 
+import Common.Common
+import Model.Places
+import Remote.IGoogleAPIService
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -16,21 +20,25 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import kotlinx.android.synthetic.main.activity_maps.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.lang.StringBuilder
 import java.util.jar.Manifest
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
+    var mMap:GoogleMap? = null
 
     private var latitude:Double=0.toDouble()
     private var longitude:Double=0.toDouble()
 
     private lateinit var mLastLocation: Location
     private var mMarker: Marker?=null
+
+
 
     //Location
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -41,13 +49,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val MY_PERMISSION_CODE: Int = 1000
     }
 
+    lateinit var mService:IGoogleAPIService
+
+    internal lateinit var currentPlace: Places
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        //Init Service
+        mService = Common.googleApiService
 
         //Request runtime permission
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -74,6 +90,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Looper.myLooper())
         }
     }
+
+
 
     private fun buildLocationCallBack() {
         locationCallback = object : LocationCallback(){
@@ -150,6 +168,63 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun nearByPlace(typePlace:String)
+    {
+        //Clear all marker on Map
+        mMap!!.clear()
+        //build URL request base on location
+        val url = getUrl(latitude,longitude,typePlace)
+
+        mService.getNearbyPlaces(url)
+            .enqueue(object:Callback<Places>{
+                override fun onFailure(call: Call<Places>, t: Throwable) {
+                    Toast.makeText(baseContext, ""+t!!.message,Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(call: Call<Places>, response: Response<Places>) {
+                    currentPlace = response!!.body()!!
+
+                    if(response!!.isSuccessful)
+
+                    {
+                        for(i in 0 until response!!.body()!!.results!!.size){
+                            val markerOptions = MarkerOptions()
+                            val googlePlace = response.body()!!.results!![i]
+                            val lat = googlePlace.geometry!!.location!!.lat
+                            val lng = googlePlace.geometry!!.location!!.lng
+                            val placeName = googlePlace.name
+                            val latLng = LatLng(lat,lng)
+
+                            markerOptions.position(latLng)
+                            markerOptions.title(placeName)
+                            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_museum))
+
+
+                            mMap!!.addMarker(markerOptions)
+                            markerOptions.snippet(i.toString())
+
+
+                            mMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                            mMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f))
+                        }
+                    }
+
+                }
+
+            })
+    }
+
+    private fun getUrl(latitude: Double, longitude: Double, typePlace: String): String {
+        val googlePlaceUrl = StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+        googlePlaceUrl.append("?location=$latitude,$longitude")
+        googlePlaceUrl.append("&radius=10000")
+        googlePlaceUrl.append("&type=$typePlace")
+        googlePlaceUrl.append("&key=AIzaSyCCCnnszxx824tQ7QN90JqpE2T4B_yCguU")
+
+        Log.d("MapsActivity", "url="+googlePlaceUrl.toString())
+        return googlePlaceUrl.toString()
+    }
+
     override fun onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         super.onStop()
@@ -171,7 +246,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap!!.isMyLocationEnabled = true
 
             //Enable Zoom Control
-            mMap.uiSettings.isZoomControlsEnabled=true
+            mMap!!.uiSettings.isZoomControlsEnabled=true
         }
     }
 }
